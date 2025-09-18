@@ -1,0 +1,154 @@
+<html><head>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <meta charset="utf-8"/>
+    <title>Stitch Design</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <style type="text/tailwindcss">
+          :root {
+            --primary-color: #ea2a33;
+            --secondary-color: #f4f0f0;
+            --text-primary: #181111;
+            --text-secondary: #886364;
+          }
+        </style>
+    </head>
+    <body class="bg-gray-50">
+    <div class="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style='font-family: Manrope, "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 px-10 py-4 bg-white">
+    <div class="flex items-center gap-4 text-[var(--text-primary)]">
+    <div class="size-8 text-[var(--primary-color)]">
+    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+    </svg>
+    </div>
+    <h2 class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em]">KeyVault</h2>
+    </div>
+    <div class="flex items-center gap-6">
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+    <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Dashboard</a>
+    <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Wallets</a>
+    <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Settings</a>
+    </nav>
+    <div class="flex items-center gap-4">
+    <button class="flex items-center justify-center rounded-full size-10 hover:bg-gray-100 transition-colors">
+    <span class="material-symbols-outlined text-gray-600">
+                      notifications
+                    </span>
+    </button>
+    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAWG6BCUs3JdLnGuNvCro_SimjNyOG_1pjjwMDcCvrqWtyGO0B3zg2x1ZHbuHJEBvMBb5QDgX2P6BwZb9zlCGjPdhip-MIs92BBlGhSFHWXVNvFZXgp9THZRPER0XZW5MU3CjZIS-IeYCssTgMhKOCO4-FCICM8-BdxN6HTjS2AWn0aBmaWrgqDuWB8lW7CdEQu8zLubraGj_-TX_h5uCj_6qEl1fG2g5rBkwfsi-coh0Y4QvMmwMtcJGkTRweYV6wrdv_awFsapA");'></div>
+    </div>
+    </div>
+    </header>
+    <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+    <h1 class="text-[var(--text-primary)] text-3xl font-bold leading-tight tracking-tight">Dashboard</h1>
+    <p class="text-gray-500 mt-1">Welcome back, here's an overview of your crypto security.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="flex flex-col gap-2 rounded-lg p-6 bg-white border border-gray-200 shadow-sm">
+    <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-green-500">
+                        verified_user
+                      </span>
+    <p class="text-gray-600 text-base font-medium leading-normal">Wallets Protected</p>
+    </div>
+    <p class="text-[var(--text-primary)] text-4xl font-bold leading-tight">3</p>
+    </div>
+    <div class="flex flex-col gap-2 rounded-lg p-6 bg-white border border-gray-200 shadow-sm">
+    <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-blue-500">
+                        update
+                      </span>
+    <p class="text-gray-600 text-base font-medium leading-normal">Last Backup</p>
+    </div>
+    <p class="text-[var(--text-primary)] text-4xl font-bold leading-tight">2 days ago</p>
+    </div>
+    </div>
+    <div class="bg-white border border-gray-200 shadow-sm rounded-lg p-6 mb-8">
+    <h2 class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em] mb-4">Quick Actions</h2>
+    <div class="flex flex-wrap gap-4">
+    <button class="flex min-w-[84px] items-center justify-center gap-2 rounded-md h-10 px-4 bg-[var(--primary-color)] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-red-700 transition-colors">
+    <span class="material-symbols-outlined">
+                        account_balance_wallet
+                      </span>
+    <span class="truncate">Manage Wallets</span>
+    </button>
+    <button class="flex min-w-[84px] items-center justify-center gap-2 rounded-md h-10 px-4 bg-gray-100 text-[var(--text-primary)] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 transition-colors">
+    <span class="material-symbols-outlined">
+                        add_to_photos
+                      </span>
+    <span class="truncate">New Backup</span>
+    </button>
+    </div>
+    </div>
+    <div class="bg-white border border-gray-200 shadow-sm rounded-lg p-6">
+    <h2 class="text-[var(--text-primary)] text-xl font-bold leading-tight tracking-[-0.015em] mb-6">Recent Activity</h2>
+    <div class="flow-root">
+    <ul class="-mb-8">
+    <li>
+    <div class="relative pb-8">
+    <span aria-hidden="true" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"></span>
+    <div class="relative flex space-x-4 items-start">
+    <div>
+    <span class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center ring-8 ring-white">
+    <span class="material-symbols-outlined text-green-600">
+                                  check
+                                </span>
+    </span>
+    </div>
+    <div class="min-w-0 flex-1 pt-1.5">
+    <p class="text-sm text-gray-800 font-medium">Backup Complete</p>
+    <p class="text-sm text-gray-500">2 days ago</p>
+    </div>
+    </div>
+    </div>
+    </li>
+    <li>
+    <div class="relative pb-8">
+    <span aria-hidden="true" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"></span>
+    <div class="relative flex space-x-4 items-start">
+    <div>
+    <span class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center ring-8 ring-white">
+    <span class="material-symbols-outlined text-blue-600">
+                                  add
+                                </span>
+    </span>
+    </div>
+    <div class="min-w-0 flex-1 pt-1.5">
+    <p class="text-sm text-gray-800 font-medium">New Wallet Added</p>
+    <p class="text-sm text-gray-500">5 days ago</p>
+    </div>
+    </div>
+    </div>
+    </li>
+    <li>
+    <div class="relative pb-0">
+    <div class="relative flex space-x-4 items-start">
+    <div>
+    <span class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center ring-8 ring-white">
+    <span class="material-symbols-outlined text-gray-600">
+                                  play_arrow
+                                </span>
+    </span>
+    </div>
+    <div class="min-w-0 flex-1 pt-1.5">
+    <p class="text-sm text-gray-800 font-medium">Backup Initiated</p>
+    <p class="text-sm text-gray-500">5 days ago</p>
+    </div>
+    </div>
+    </div>
+    </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    </main>
+    </div>
+    </div>
+    
+    </body></html>

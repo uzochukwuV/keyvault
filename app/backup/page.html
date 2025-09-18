@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KeyVault - One-Click Backup</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #ea2a33;
+      --primary-hover-color: #c8232c;
+      --text-primary: #111827;
+      --text-secondary: #6B7280;
+      --background-light: #F9FAFB;
+      --border-color: #E5E7EB;
+    }
+    body {
+      font-family: 'Manrope', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-background-light text-primary">
+<div class="flex flex-col min-h-screen">
+<header class="bg-white border-b border-border-color">
+<div class="container mx-auto px-6 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-[var(--primary-color)] rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-white">key</span>
+</div>
+<h1 class="text-xl font-bold text-primary">KeyVault</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium text-secondary hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-secondary hover:text-primary transition-colors" href="#">Wallets</a>
+<a class="text-sm font-medium text-primary transition-colors border-b-2 border-[var(--primary-color)] pb-1" href="#">Backup</a>
+<a class="text-sm font-medium text-secondary hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCODX4eKojXw9rWFyw3LbsiVRFmScdCRj4c3XjPjW_7HPRPTyzvGZA6uVyW6DhFMkc3ByDwp4rLrYwXMTo0A4VRGJPv20vIRXWY5vh7o_milM6mKLPxMDqaB143Jj--qouocWQU_wKp_7A8ubQY9JBBDZaVcq532y1_tGmkFROh_v_h01zYpOnSi6ytox3c89eJ7q6QJwoZor2E23hkKkVRBkueWxJh2Ek_57jIot_fRpvf0JDF4wVX6Wcrcp11E_CywuTwioZ1Ww");'></div>
+<button class="md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-2xl w-full bg-white p-8 md:p-12 rounded-2xl shadow-sm">
+<div class="text-center">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--primary-color)]/10 mb-6">
+<span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">
+              cloud_sync
+              </span>
+</div>
+<h2 class="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight">Automated One-Click Backup</h2>
+<p class="mt-4 text-lg text-secondary">
+            Effortlessly secure your digital assets. KeyVault automatically encrypts and stores your wallet's seed phrase on the decentralized and ultra-secure Filecoin network.
+          </p>
+</div>
+<div class="mt-10">
+<h3 class="text-lg font-semibold text-primary text-center mb-6">Compatible with your favorite wallets</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="flex flex-col items-center justify-center gap-3 rounded-xl border border-border-color bg-background-light p-4 transition-all hover:shadow-md hover:border-[var(--primary-color)]/50">
+<img alt="MetaMask Logo" class="h-10 w-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCGBxzDao5cbz4AT8lEIP_j-DxVg6wjKRi5KYmDjuaw5Canflz4GX-O3DbwKqB-LM4nUzW20F_6jQBulr7PyNs1kF63bONXnBx69f3TC3f68yEHfiT-2473tpOuJzUuVbJv2b82atkJx-htrrDJJw9dqzkZ_KtF32NNnu0sqeaeKzu4Rxfm7yxEJnsUM2_hyWgpA4l4JNMFfFfku0T6S2jcyWi_Uq57pvEAiQNr-cQdqGaeZC6_D8pZd75xuYpgsgvP8rAKn5_RQ"/>
+<h4 class="text-sm font-semibold text-primary">MetaMask</h4>
+</div>
+<div class="flex flex-col items-center justify-center gap-3 rounded-xl border border-border-color bg-background-light p-4 transition-all hover:shadow-md hover:border-[var(--primary-color)]/50">
+<img alt="Rainbow Wallet Logo" class="h-10 w-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo5YNU1yiPIx3B2-F8G8MfL5PVUDdbja5FdBRQ4xr3hbxAsWcchCcf2EmIx2-E0og22IPdnmfiZ3lrOZiZOTVYEZMk13z_aNWzqBIcUTgmNjctRUm4HxU8owZ42TjCf5oHzh0slGnBtGJclwCTfa2LAGfLCwscPOlKcf9JcG3yO21OUiNCcyr0Y0pVY2SrniIB1xlvI0Ed6VPKRu2TF93taXc7wubzd2obY9U1yOH2Wg-3nRU6Eti9cKA_5UijluUBB9nnzLPsuQ"/>
+<h4 class="text-sm font-semibold text-primary">Rainbow</h4>
+</div>
+<div class="flex flex-col items-center justify-center gap-3 rounded-xl border border-border-color bg-background-light p-4 transition-all hover:shadow-md hover:border-[var(--primary-color)]/50">
+<img alt="Coinbase Wallet Logo" class="h-10 w-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdWFjK-gd_iWDirSbA1dkLfdPcjte1DMB-icZdA_2F7P1LiRx1DrXiDk-H1WsP0Sbto9DUawgBrKQ3_neKcZhlgKwc0I1aankXYnrD0Fbj_CgnebdKfy440xf0nMnxoP0B74Yxi7ygLFA-eiJ1ZS2bYYirCo7jaYXpj-xcXN6QpRTQCLE2yDbNE4JxGa5ecQQp1ll1EHMFBej7EPRR9XYGMcCwND5rp2lUXzZlrrslRk1WmPrnIRQySTJa55c1b1MOugkLXc4NgA"/>
+<h4 class="text-sm font-semibold text-primary">Coinbase Wallet</h4>
+</div>
+<div class="flex flex-col items-center justify-center gap-3 rounded-xl border border-border-color bg-background-light p-4 transition-all hover:shadow-md hover:border-[var(--primary-color)]/50">
+<span class="material-symbols-outlined text-4xl text-secondary">
+                hardware
+              </span>
+<h4 class="text-sm font-semibold text-primary">Hardware Wallets</h4>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center">
+<button class="w-full max-w-sm mx-auto flex items-center justify-center gap-3 rounded-xl h-14 px-8 bg-[var(--primary-color)] text-white text-lg font-bold shadow-lg shadow-[var(--primary-color)]/30 hover:bg-[var(--primary-hover-color)] transition-all transform hover:scale-105">
+<span class="material-symbols-outlined">shield_lock</span>
+<span>Initiate Secure Backup</span>
+</button>
+<p class="mt-4 text-xs text-secondary">By clicking, you agree to our Terms of Service.</p>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
