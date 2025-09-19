@@ -73,10 +73,10 @@ export const useFileUpload = () => {
       if (providerId) {
        
         const provider = await synapse.getProviderInfo(providerId);
-        if (!provider || !provider.active) {
+        if (!provider || !provider.registeredAt) {
           throw new Error(`Storage provider ${providerId} is not available or inactive`);
         }
-        setStatus(`✅ Validated storage provider: ${provider.name || 'Unknown'}`);
+        setStatus(`✅ Validated storage provider: ${provider.serviceProvider || 'Unknown'}`);
       }
 
       // 8) Create storage service with enhanced error handling
