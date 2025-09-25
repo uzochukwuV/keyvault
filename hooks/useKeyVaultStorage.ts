@@ -48,6 +48,10 @@ export interface DistributedStorage {
 export const useKeyVaultStorage = () => {
   const [status, setStatus] = useState<string>('');
   const [progress, setProgress] = useState<number>(0);
+
+  const { address } = useAccount();
+  const signer = useEthersSigner();
+  const { uploadFileMutation } = useFileUpload();
   const [redundancyConfig, setRedundancyConfig] = useState<RedundancyConfig>({
     minReplicas: 3,
     maxReplicas: 5,
@@ -164,11 +168,13 @@ export const useKeyVaultStorage = () => {
     mutationFn: async ({
       data,
       filename,
-      keyId
+      keyId,
+      primaryCid
     }: {
       data: Uint8Array;
       filename: string;
       keyId: string;
+      primaryCid?: string;
     }) => {
       if (!address || !signer) throw new Error('Wallet not connected');
       if (!providersQuery.data) throw new Error('No providers available');
@@ -251,7 +257,7 @@ export const useKeyVaultStorage = () => {
         dataHash: dataHashHex,
         replicas: deals,
         redundancyMet: deals.length >= redundancyConfig.minReplicas,
-        primaryCid: deals[0]?.dataCid || ''
+        primaryCid: primaryCid || deals[0]?.dataCid || ''
       };
 
       setStatus(`✅ Data successfully stored across ${deals.length} providers!`);

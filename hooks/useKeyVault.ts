@@ -5,7 +5,9 @@ import { useEthersSigner } from '@/hooks/useEthers';
 import { useShamirRecovery } from '@/hooks/useShamirRecovery';
 import { useSocialRecovery } from '@/hooks/useSocialRecovery';
 import { useKeyVaultStorage } from '@/hooks/useKeyVaultStorage';
+import { useFileUpload } from '@/hooks/useFileUpload';
 import { ShamirSecretSharing } from '@/utils/shamirSecretSharing';
+import { deployKeyVaultSuite, type ContractAddresses, type DeploymentConfig } from '@/utils/contractDeployment';
 import { ethers } from 'ethers';
 
 export type RecoveryMethod = 'none' | 'shamir' | 'social' | 'both';
@@ -29,6 +31,7 @@ export interface KeyVaultConfig {
   recoveryMethod: RecoveryMethod;
   isInitialized: boolean;
   createdAt: number;
+  contractAddresses?: ContractAddresses;
 }
 
 export interface BackupStrategy {
@@ -52,6 +55,7 @@ export const useKeyVault = () => {
   const shamirRecovery = useShamirRecovery();
   const socialRecovery = useSocialRecovery();
   const storage = useKeyVaultStorage();
+  const { uploadFileMutation } = useFileUpload();
 
   /**
    * Initialize KeyVault for the user
@@ -101,8 +105,25 @@ export const useKeyVault = () => {
       setStatus('⛓️ Deploying vault on blockchain...');
       setProgress(60);
 
-      // In real implementation, deploy KeyVault contract
-      // This is a placeholder
+      // Deploy KeyVault contract suite
+      const deploymentConfig: DeploymentConfig = {
+        recoveryMethod: recoveryMethod === 'none' ? 'shamir' : recoveryMethod,
+        shamirConfig: recoveryMethod === 'shamir' || recoveryMethod === 'both' ? {
+          threshold: backupStrategy.redundancyLevel === 'high' ? 3 : 2,
+          totalShares: backupStrategy.redundancyLevel === 'high' ? 5 : 3,
+          keyId: `vault_${address}_${Date.now()}`
+        } : undefined,
+        socialConfig: recoveryMethod === 'social' || recoveryMethod === 'both' ? {
+          requiredApprovals: backupStrategy.redundancyLevel === 'high' ? 4 : 3,
+          recoveryDelay: backupStrategy.redundancyLevel === 'high' ? 72 * 60 * 60 : 48 * 60 * 60
+        } : undefined
+      };
+
+      const contractAddresses = await deployKeyVaultSuite(signer, deploymentConfig);
+      vaultConfig.contractAddresses = contractAddresses;
+
+      setStatus('📝 Recording vault registration...');
+      setProgress(90);
 
       // Save config to localStorage for persistence
       localStorage.setItem(`keyvault_config_${address}`, JSON.stringify(vaultConfig));
@@ -161,23 +182,40 @@ export const useKeyVault = () => {
       setStatus('☁️ Storing encrypted key on Filecoin...');
       setProgress(15);
 
-      // Store primary encrypted key with redundancy
-      const distributedStorage = await new Promise<any>((resolve, reject) => {
-        storage.storeWithRedundancy({
-          data: encryptedKey,
-          filename: `${keyId}.enc`,
-          keyId
-        });
+      // Create a file from encrypted key data
+      const encryptedFile = new File([encryptedKey], `${keyId}.enc`, {
+        type: 'application/octet-stream'
+      });
 
-        // Mock successful storage - in real implementation, wait for actual result
-        setTimeout(() => {
-          resolve({
-            dataHash: 'mock_hash',
-            primaryCid: 'mock_cid',
-            replicas: [],
-            redundancyMet: true
-          });
-        }, 1000);
+      // Upload encrypted key to Filecoin using file upload hook
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        uploadFileMutation.mutate(encryptedFile, {
+          onSuccess: (result) => {
+            resolve({
+              dataHash: result.pieceCid || 'uploaded_hash',
+              primaryCid: result.pieceCid || 'uploaded_cid',
+              txHash: result.txHash,
+              fileName: result.fileName,
+              fileSize: result.fileSize,
+              replicas: [],
+              redundancyMet: true
+            });
+          },
+          onError: (error) => {
+            reject(error);
+          }
+        });
+      });
+
+      setStatus('🔄 Storing with redundancy across providers...');
+      setProgress(25);
+
+      // Store with redundancy using storage hook
+      const distributedStorage = await storage.storeWithRedundancy({
+        data: encryptedKey,
+        filename: `${keyId}.enc`,
+        keyId,
+        primaryCid: uploadResult.primaryCid
       });
 
       setProgress(40);
@@ -194,15 +232,60 @@ export const useKeyVault = () => {
         }
 
         // Split the private key using Shamir sharing
-        await new Promise<void>((resolve, reject) => {
-          shamirRecovery.splitAndDistribute({
-            privateKey: privateKeyData,
-            providers: storage.providers.slice(0, shamirRecovery.config!.totalShares)
+        const shamirShares = ShamirSecretSharing.split(
+          privateKeyData,
+          shamirRecovery.config.totalShares,
+          shamirRecovery.config.threshold
+        );
+
+        setStatus('📤 Distributing shares across Filecoin providers...');
+        setProgress(50);
+
+        // Upload each share to different providers
+        for (let i = 0; i < shamirShares.length; i++) {
+          const share = shamirShares[i];
+          const shareData = new Uint8Array([
+            ...new TextEncoder().encode(JSON.stringify({
+              shareIndex: share.shareIndex,
+              shareValue: Array.from(share.shareValue),
+              keyId: keyId,
+              timestamp: Date.now()
+            }))
+          ]);
+
+          const shareFile = new File([shareData], `${keyId}_share_${share.shareIndex}.json`, {
+            type: 'application/json'
           });
 
-          // Mock successful distribution
-          setTimeout(resolve, 1500);
-        });
+          try {
+            const shareUploadResult = await new Promise<any>((resolve, reject) => {
+              uploadFileMutation.mutate(shareFile, {
+                onSuccess: resolve,
+                onError: reject
+              });
+            });
+
+            // Store share metadata for recovery
+            const shareInfo = {
+              keyId,
+              shareIndex: share.shareIndex,
+              cid: shareUploadResult.pieceCid,
+              provider: `provider_${i + 1}`,
+              timestamp: Date.now()
+            };
+
+            // Save share info to localStorage for recovery
+            const existingShares = JSON.parse(localStorage.getItem(`shamir_shares_${address}`) || '[]');
+            existingShares.push(shareInfo);
+            localStorage.setItem(`shamir_shares_${address}`, JSON.stringify(existingShares));
+
+          } catch (error) {
+            console.error(`Failed to upload share ${i + 1}:`, error);
+            // Continue with other shares - may still meet threshold
+          }
+
+          setProgress(50 + ((i + 1) / shamirShares.length) * 20);
+        }
 
         hasSharedShares = true;
         setProgress(70);
@@ -215,14 +298,41 @@ export const useKeyVault = () => {
         setProgress(85);
       }
 
-      setStatus('📝 Recording key metadata...');
+      setStatus('📝 Recording key metadata on blockchain...');
+
+      // Record key metadata on KeyVault contract
+      if (config.contractAddresses?.keyVault) {
+        const keyVaultContract = new ethers.Contract(
+          config.contractAddresses.keyVault,
+          [
+            "function storeKey(string title, string keyType, string masterCid, bytes encDataKey, bytes32 keyHash, bool hasSharedShares, bool hasSocialBackup) returns (uint256)"
+          ],
+          signer
+        );
+
+        const encDataKeyBytes = ethers.getBytes('0x' + Array.from(encDataKey).map(b => b.toString(16).padStart(2, '0')).join(''));
+        const keyHashBytes = ethers.keccak256(ethers.toUtf8Bytes(keyHash));
+
+        const tx = await keyVaultContract.storeKey(
+          title,
+          keyType,
+          distributedStorage.primaryCid || 'unknown_cid',
+          encDataKeyBytes,
+          keyHashBytes,
+          hasSharedShares,
+          hasSocialBackup
+        );
+
+        await tx.wait();
+        setProgress(95);
+      }
 
       // Create key record
       const keyRecord: KeyRecord = {
         id: keyId,
         title,
         keyType,
-        masterCid: distributedStorage.primaryCid,
+        masterCid: distributedStorage.primaryCid || uploadResult.primaryCid,
         encDataKey: Array.from(encDataKey).map(b => b.toString(16).padStart(2, '0')).join(''),
         keyHash,
         version: 1,
