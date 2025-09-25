@@ -12,8 +12,9 @@ import { useBalances } from "@/hooks/useBalances";
 import Github from "@/components/ui/icons/Github";
 import Filecoin from "@/components/ui/icons/Filecoin";
 import { useRouter, useSearchParams } from "next/navigation";
+import { KeyVaultDashboard } from "@/components/KeyVaultDashboard";
 
-type Tab = "manage-storage" | "upload" | "datasets";
+type Tab = "manage-storage" | "upload" | "datasets" | "keyvault";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,14 +40,14 @@ const itemVariants = {
 
 export default function Home() {
   const { isConnected, chainId } = useAccount();
-  const [activeTab, setActiveTab] = useState<Tab>("manage-storage");
+  const [activeTab, setActiveTab] = useState<Tab>("keyvault");
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showConfetti } = useConfetti();
   const { data: balances, isLoading: isLoadingBalances } = useBalances();
 
   const isTab = (value: string | null): value is Tab =>
-    value === "manage-storage" || value === "upload" || value === "datasets";
+    value === "manage-storage" || value === "upload" || value === "datasets" || value === "keyvault";
 
   const updateUrl = (tab: Tab) => {
     const params = new URLSearchParams(searchParams?.toString());
@@ -183,12 +184,24 @@ export default function Home() {
               variants={itemVariants}
               className="mt-3 max-w-5xl w-full border-1 rounded-lg p-8"
             >
-              <motion.div variants={itemVariants} className="flex mb-6">
+              <motion.div variants={itemVariants} className="flex mb-6 overflow-x-auto">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleTabChange("keyvault")}
+                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors whitespace-nowrap ${
+                    activeTab === "keyvault"
+                      ? "border-primary text-primary-foreground bg-primary"
+                      : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
+                  }`}
+                >
+                  🔐 KeyVault
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("manage-storage")}
-                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${
+                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors whitespace-nowrap ${
                     activeTab === "manage-storage"
                       ? "border-primary text-primary-foreground bg-primary"
                       : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
@@ -200,7 +213,7 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("upload")}
-                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${
+                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors whitespace-nowrap ${
                     activeTab === "upload"
                       ? "border-primary text-primary-foreground bg-primary"
                       : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
@@ -212,7 +225,7 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleTabChange("datasets")}
-                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors ${
+                  className={`flex-1 py-2 px-4 text-center border-b-2 transition-colors whitespace-nowrap ${
                     activeTab === "datasets"
                       ? "border-primary text-primary-foreground bg-primary"
                       : "border-transparent text-secondary hover:text-primary hover:bg-secondary/10"
@@ -223,7 +236,21 @@ export default function Home() {
               </motion.div>
 
               <AnimatePresence mode="wait">
-                {activeTab === "manage-storage" ? (
+                {activeTab === "keyvault" ? (
+                  <motion.div
+                    key="keyvault"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 20,
+                    }}
+                  >
+                    <KeyVaultDashboard />
+                  </motion.div>
+                ) : activeTab === "manage-storage" ? (
                   <motion.div
                     key="deposit"
                     initial={{ opacity: 0, x: -20 }}
